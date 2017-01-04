@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en_us" ng-app="MainApp">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Loading...</title>
+
+    <!--样式处理[公共]-->
+    <link rel="stylesheet"  href="common/angular-material/angular-material.min.css" />
+
+    <!--公共JS[内置]-->
+    <script src="common/jquery/jquery.min.js"></script>
+    <script src="common/jquery/jquery.json-2.4.js"></script>
+    <script src="common/engine.io.client/engine.io.js"></script>
+    <script src="common/hammerjs/hammer.min.js"></script>
+
+    <script src="common/angular/angular.min.js"></script>
+    <script src="common/angular/angular-animate.min.js"></script>
+    <script src="common/angular/angular-aria.min.js"></script>
+    <script src="common/angular/angular-cookies.min.js"></script>
+
+    <script src="common/angular-material/angular-material.min.js"></script>
+
+    <!--国际化-->
+    <script src="common/angular-translate/angular-translate.min.js"></script>
+    <script src="common/angular-translate/service/default-interpolation.js"></script>
+    <script src="common/angular-translate/service/handler-log.js"></script>
+    <script src="common/angular-translate/service/loader-static-files.js"></script>
+    <script src="common/angular-translate/service/loader-partial.js"></script>
+    <script src="common/angular-translate/service/loader-url.js"></script>
+    <script src="common/angular-translate/service/storage-key.js"></script>
+    <script src="common/angular-translate/service/storage-local.js"></script>
+    <script src="common/angular-translate/service/storage-cookie.js"></script>
+    <script src="common/angular-translate/service/translationCache.js"></script>
+
+    <!--App样式处理-->
+    <link rel="stylesheet"  href="styles/ui.css" />
+    <!--App引用JS 非Mini方式-->
+    <script src="js/util.js"></script>
+    <script src="js/bs.js"></script>
+    <script src="js/plugins/im.js"></script>
+    <script src="js/ui/ui_constant.js"></script>
+    <script src="js/ui/ui_common.js"></script>
+    <script src="js/ui/ui_plugins_def.js"></script>
+    <script src="js/ui/ui_plugins_data.js"></script>
+    <script src="js/ui/ui_bus_py_core.js"></script>
+    <script src="js/ui/ui_bus_py_task.js"></script>
+    <script src="js/ui/ui_angular.js"></script>
+    <script src="js/ui/ui_bs.js"></script>
+    <script src="js/ui/ui.js"></script>
+
+</head>
+
+<body>
+
+<div class="k-content-frame" ng-controller="AppCtrl">
+    <div class="middle">
+        <div class="app-info">
+            <h1>{{ 'AppTitle' | translate }}</h1>
+            <p>{{ 'AppDescription' | translate }} </p>
+        </div>
+        <div class="app-content">
+            <div class="app-content-left">
+                <div class="content-fixed" layout="column" layout-align="center center">
+                    <section layout="vertical" layout-sm="horizontal" layout-align="center end">
+                        <img src="images/logo_64.png" />
+                    </section>
+                    <section class="ng-hide" layout="vertical" layout-sm="horizontal" layout-align="center end">
+                        <select ng-model="uiLanguage" ng-change="uiLanguageChange(uiLanguage)" ng-options="k as v for (k, v) in uiLanguageList"></select>
+                    </section>
+                </div>
+            </div>
+            <div class="app-content-right">
+                <md-tabs class="md-accent" md-selected="data.selectedIndex">
+                    <md-tab id="tab-main" aria-controls="tab-main-content">
+                        {{ "tab-main.text" | translate }}
+                    </md-tab>
+                    <md-tab id="tab-settings" aria-controls="tab-settings-content">
+                        {{ "tab-settings.text" | translate }}
+                    </md-tab>
+                    <md-tab id="tab-log" aria-controls="tab-log-content">
+                        {{ "tab-log.text" | translate }}
+                    </md-tab>
+                </md-tabs>
+
+                <ng-switch on="data.selectedIndex">
+                    <div class="content" role="tabpanel" id="tab-main-content" aria-labelledby="tab-main" ng-switch-when="0">
+
+                        <!--InputPath-->
+                        <md-card>
+                            <label for="input-InputPath" id="label-InputPath">
+                                <span>{{'labelInputPath' | translate}}</span></br>{{ 'spanInputPath' | translate }}
+                            </label>
+                            <input type="text" id="input-InputPath" ng-model="options.ddInputPath"/>
+                            <!--Btn-->
+                            <md-button id="btn-select" class="md-raised" ng-click="onSelectDir()">...
+                                <md-tooltip>
+                                    {{ 'btn-select.tooltip' | translate  }}
+                                </md-tooltip>
+                            </md-button>
+                        </md-card>
+
+                        <md-card>
+                            <!--Format-->
+                            <label for="input-format" id="label-format">
+                                <span>{{'labelFormat' | translate}}</span>
+                                <!--Btn-->
+                                <md-button id="btn-help" class="md-warn md-raised md-hue-2" ng-click="onShowHelp($event)">?
+                                    <md-tooltip>
+                                        {{ 'btn-help.tooltip' | translate  }}
+                                    </md-tooltip>
+                                </md-button>
+                            </label>
+                            <input id="input-format" ng-model="options.ddFormat"/>
+
+                        </md-card>
+
+                    </div>
+
+                    <div class="content" role="tabpanel" id="tab-settings-content" aria-labelledby="tab-settings" ng-switch-when="1">
+                        <md-card>
+                            <!--Options-->
+                            <div layout="row" layout-align="center">
+                                <md-checkbox ng-model="options.recursive" aria-label="recursive" flex="50">
+                                    {{ 'options.recursive' | translate}}
+                                </md-checkbox>
+
+                                <md-checkbox ng-model="options.hide" aria-label="hide" flex="50">
+                                    {{ 'options.hide' | translate}}
+                                </md-checkbox>
+                            </div>
+
+                            <div layout="row" layout-align="center">
+                                <md-checkbox ng-model="options.overwrite" aria-label="overwrite" flex="50">
+                                    {{ 'options.overwrite' | translate}}
+                                </md-checkbox>
+
+                                <md-checkbox ng-model="options.deleteSource" aria-label="deleteSource" flex="50">
+                                    {{ 'options.deleteSource' | translate}}
+                                </md-checkbox>
+                            </div>
+
+                            <div layout="row" layout-align="center center">
+                                <md-checkbox ng-model="options.enableSequence" aria-label="enableSequence" flex="70">
+                                    {{ "options.enableSequence" | translate }}
+                                </md-checkbox>
+                                <input flex="36" type="number" step="any" name="rate" ng-model="options.sequence" value="1" min="1" max="99999999" required/>
+                            </div>
+
+                        </md-card>
+
+                        <md-card>
+                            <!--Output-->
+                            <label for="input-OutputPath" id="label-OutputPath">
+                                <span>{{'labelOutputPath' | translate}}</span></br>{{ 'spanOutputPath' | translate }}
+                            </label>
+                            <input id="input-OutputPath" ng-model="options.ddOutputPath" />
+                            <md-button class="md-raised" ng-click="onSelectOutDir()">...
+                                <md-tooltip>
+                                    {{ 'btn-selectOutDir.tooltip' | translate  }}
+                                </md-tooltip>
+                            </md-button>
+                        </md-card>
+
+
+
+                    </div>
+
+                    <div class="content" role="tabpanel" id="tab-log-content" aria-labelledby="tab-log" ng-switch-when="2">
+                        <section>
+                            <md-list role="list">
+                                <!--<md-subheader class="md-primary">{{ message.groupDate }}</md-subheader>-->
+                                <md-item ng-repeat="message in messages">
+                                    <md-item-content>
+                                        <div class="md-title-left">
+                                            <img ng-src="{{ message.face }}" class="message-face"/>
+                                        </div>
+                                        <div class="md-title-content">
+                                            <p>{{ message.detail }}</p>
+                                        </div>
+                                    </md-item-content>
+                                </md-item>
+                            </md-list>
+                        </section>
+                        <div class="md-actions" layout="row">
+                            <span flex></span>
+                            <md-button id="btn-clearLog" aria-label="btn-clearLog" class="sm-button" ng-click="onClickLog()">
+                                <md-icon icon="images/trash_16.png"></md-icon>
+                                <md-tooltip>
+                                    {{ 'btn-clearLog.tooltip' | translate  }}
+                                </md-tooltip>
+                            </md-button>
+                        </div>
+
+
+                    </div>
+                    <div class="controls-bar" layout="row" layout-align="center end">
+                        <md-content>
+                            <section layout="vertical" layout-sm="horizontal" layout-align="center end">
+                                <md-progress-linear md-mode="indeterminate" ng-hide="ddProgressHide"></md-progress-linear>
+                            </section>
+
+                            <section layout="vertical" layout-sm="horizontal" layout-align="center end">
+                                <md-button id="btn-processDir" aria-label="btn-processDir" ng-disabled="ddRenameBtnDisabled" class="md-raised md-warn" ng-click="onClickRename()">{{'btn-process' | translate}}
+                                </md-button>
+                            </section>
+                        </md-content>
+                    </div>
+                </ng-switch>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    window.UI.c$.launch();
+</script>
+</body>
+</html>

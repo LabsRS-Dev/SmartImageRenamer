@@ -1,0 +1,38 @@
+<md-dialog aria-label="Format string help">
+    <md-content>
+        <md-subheader class="md-sticky-no-effect">{{ "dialog.format.title" | translate }}</md-subheader>
+            <pre>
+                <code>
+Format string for the file name is defined by a mix of
+                 custom text and following tags enclosed in {}:
+YYYY        Year
+MM          Month
+DD          Day
+hh          Hours
+mm          Minutes
+ss          Seconds
+Seq         Sequence number
+Artist      Artist
+Make        Camera Make
+Model       Camera Model
+Folder      Parent folder of the image file
+
+Examples:
+Format String:          {YYYY}-{MM}-{DD}-{Folder}-{Seq}
+File Name:              2014-05-09-Wedding_Shoot-001.JPEG
+                        2014-05-09-Wedding_Shoot-002.JPEG
+
+Format String:          {YYYY}{DD}{MM}_{Model}_Beach_Shoot_{Seq}
+File Name:              20140429_PENTAX K-x_Beach_Shoot_001.JPEG
+                        20140429_PENTAX K-x_Beach_Shoot_002.JPEG
+                </code>
+            </pre>
+
+    </md-content>
+    <div class="md-actions" layout="row">
+        <span flex></span>
+        <md-button ng-click="answer('useful')" class="md-primary">
+            {{ "dialog.format.btn-ok" | translate }}
+        </md-button>
+    </div>
+</md-dialog>

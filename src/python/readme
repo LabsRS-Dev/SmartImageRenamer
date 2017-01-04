@@ -1,0 +1,9 @@
+https://pypi.python.org/pypi/smart-image-renamer/0.3
+
+1.windows平台：
+pip install --install-option="--install-lib='%cd%'" smart-image-renamer
+
+或者：
+
+2.mac 平台
+
